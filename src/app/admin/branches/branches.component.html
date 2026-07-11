@@ -1,0 +1,36 @@
+<section class="page-shell">
+  <div class="page-header">
+    <div>
+      <h2>Branches</h2>
+      <p class="subtitle">View active branches and update branch operating details.</p>
+    </div>
+  </div>
+
+  <div class="layout">
+    <section class="panel">
+      <h3>Branches</h3>
+      <app-loading-spinner *ngIf="loading && branches.length === 0" label="Loading branches..."></app-loading-spinner>
+      <app-loading-spinner *ngIf="loading && branches.length > 0" label="Refreshing branches..." [compact]="true"></app-loading-spinner>
+      <div *ngIf="error" class="error">{{ error }}</div>
+      <div *ngIf="!loading && !error && branches.length === 0" class="loading">No branches found.</div>
+      <button class="branch-row" type="button" *ngFor="let b of branches" (click)="select(b)" [class.active]="selected?.id === b.id">
+        <strong>{{ b.branchName }}</strong>
+        <span>{{ b.branchCode }} - {{ b.city || 'City not set' }}</span>
+      </button>
+    </section>
+
+    <form class="panel" [formGroup]="form" (ngSubmit)="save()" *ngIf="selected">
+      <h3>Edit {{ selected.branchCode }}</h3>
+      <div class="grid">
+        <label>Name<input formControlName="branchName" /></label>
+        <label>Phone<input formControlName="phone" /></label>
+        <label>Open time<input formControlName="openTime" /></label>
+        <label>Close time<input formControlName="closeTime" /></label>
+        <label>Closed day<input formControlName="closedDay" /></label>
+        <label>Notification email<input formControlName="notificationEmail" /></label>
+        <label class="wide">Address<input formControlName="address" /></label>
+      </div>
+      <button class="button primary" type="submit" [disabled]="loading || form.invalid">Update branch</button>
+    </form>
+  </div>
+</section>

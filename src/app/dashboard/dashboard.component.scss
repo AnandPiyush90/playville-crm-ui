@@ -1,0 +1,25 @@
+.dashboard-shell {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(180deg, #eff6ff 0%, #f8fafc 100%);
+  padding: 2rem;
+}
+.dashboard-card {
+  width: min(760px, 100%);
+  padding: 2rem;
+  border-radius: 1rem;
+  background: white;
+  box-shadow: 0 24px 48px rgba(15, 23, 42, 0.08);
+}
+.dashboard-card h1 {
+  margin: 0 0 1rem;
+  color: #0f172a;
+  font-size: 2rem;
+}
+.dashboard-card p {
+  margin: 0;
+  color: #475569;
+  line-height: 1.75;
+}

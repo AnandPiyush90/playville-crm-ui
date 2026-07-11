@@ -1,0 +1,64 @@
+<section class="page-shell">
+  <div class="page-header">
+    <div>
+      <h2>Purchases</h2>
+      <p class="subtitle">Sell or recharge a package for a customer account.</p>
+    </div>
+  </div>
+
+  <form [formGroup]="form" (ngSubmit)="purchase()" class="form-shell">
+    <div class="grid">
+      <label>
+        Customer
+        <select formControlName="customerId" (change)="loadHistory()">
+          <option [ngValue]="null">Select customer</option>
+          <option *ngFor="let c of customers" [ngValue]="c.id">{{ c.parentName }} - {{ c.phoneNumber }}</option>
+        </select>
+      </label>
+      <label>
+        Package
+        <select formControlName="packageId">
+          <option [ngValue]="null">Select package</option>
+          <option *ngFor="let p of packages" [ngValue]="p.id">{{ p.packageName }} - {{ p.totalPrice }}</option>
+        </select>
+      </label>
+      <label>
+        Payment mode
+        <select formControlName="paymentMode">
+          <option value="Cash">Cash</option>
+          <option value="UPI">UPI</option>
+          <option value="Card">Card</option>
+          <option value="Online">Online</option>
+        </select>
+      </label>
+      <label>Reference<input formControlName="paymentReference" /></label>
+      <label>Discount<input type="number" formControlName="discountApplied" /></label>
+      <label>Notes<input formControlName="notes" /></label>
+    </div>
+    <button class="button primary" type="submit" [disabled]="loading || form.invalid">Purchase package</button>
+  </form>
+
+  <section class="panel" *ngIf="history.length">
+    <h3>Selected customer history</h3>
+    <table><tr *ngFor="let h of history"><td>{{ h.packageName }}</td><td>{{ h.paymentMode }}</td><td>{{ h.balanceBefore }} -> {{ h.balanceAfter }}</td><td>{{ h.createdAt }}</td></tr></table>
+  </section>
+
+  <section class="panel">
+    <h3>Recent purchases</h3>
+    <app-loading-spinner *ngIf="loading" label="Loading purchases..."></app-loading-spinner>
+    <div *ngIf="error" class="error">{{ error }}</div>
+    <div *ngIf="!loading && !error && purchases.length === 0" class="loading">No purchases found.</div>
+    <table *ngIf="purchases.length">
+      <thead><tr><th>Customer</th><th>Package</th><th>Payment</th><th>Balance</th><th>Date</th></tr></thead>
+      <tbody>
+        <tr *ngFor="let p of purchases">
+          <td>{{ p.parentName || p.customerId }}</td>
+          <td>{{ p.packageName || p.packageId }}</td>
+          <td>{{ p.paymentMode }} {{ p.amountPaid ?? '' }}</td>
+          <td>{{ p.balanceBefore ?? '-' }} -> {{ p.balanceAfter ?? '-' }}</td>
+          <td>{{ p.createdAt || '-' }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+</section>

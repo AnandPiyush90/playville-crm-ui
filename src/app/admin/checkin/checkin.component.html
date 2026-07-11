@@ -1,0 +1,128 @@
+<section class="checkin-shell">
+  <div class="page-header">
+    <div>
+      <h2>Check-in / Check-out</h2>
+      <p class="subtitle">Create a new visit or checkout active visits for the branch.</p>
+    </div>
+    <button class="button secondary" type="button" (click)="loadActiveCheckins()" [disabled]="activeLoading">Refresh active</button>
+  </div>
+
+  <app-loading-spinner *ngIf="loading && !customer" label="Loading customer..."></app-loading-spinner>
+  <app-loading-spinner *ngIf="loading && customer" label="Processing..." [compact]="true"></app-loading-spinner>
+  <div *ngIf="error" class="error">{{ error }}</div>
+
+  <div *ngIf="customer" class="checkin-panel">
+    <div class="customer-summary">
+      <div>
+        <h3>{{ customer.parentName }}</h3>
+        <p>{{ customer.phoneNumber }}</p>
+        <p>{{ customer.currentPackageName || 'No active package' }}</p>
+        <p>Session balance: {{ customer.globalSessionBalance ?? 0 }}</p>
+      </div>
+
+      <ng-container *ngIf="getLoadedCustomerActiveCheckin() as active; else readyToCheckIn">
+        <span class="status-pill checked-in">Checked in</span>
+        <div class="active-note">
+          <strong>Checked in at:</strong> {{ active.checkinTime || active.checkedInAt || '-' }}<br />
+          <strong>Children:</strong> {{ kidNames(active) }}
+        </div>
+      </ng-container>
+
+      <ng-template #readyToCheckIn>
+        <span class="status-pill ready">Ready for check-in</span>
+      </ng-template>
+    </div>
+
+    <ng-container *ngIf="!checkinIdToCheckout; else selectedCustomerCheckout">
+      <ng-container *ngIf="customer.kids && customer.kids.length; else noKids">
+        <label class="field-group">
+          Children
+          <select multiple size="5" [(ngModel)]="selectedKidIds">
+            <option *ngFor="let k of customer.kids" [ngValue]="k.id">
+              {{ k.kidName }} - {{ k.gender }} - DOB: {{ k.dob }}
+            </option>
+          </select>
+        </label>
+
+        <div class="selection-summary">
+          {{ selectedKidIds.length }} child{{ selectedKidIds.length === 1 ? '' : 'ren' }} selected
+        </div>
+
+        <div class="actions">
+          <button class="button primary" type="button" (click)="performCheckin()" [disabled]="selectedKidIds.length === 0 || loading">Check in</button>
+        </div>
+      </ng-container>
+    </ng-container>
+
+    <ng-template #selectedCustomerCheckout>
+      <section class="checkout-box" *ngIf="checkinIdToCheckout as selectedCheckoutId">
+        <h4>Checkout this customer</h4>
+        <label>
+          Extra charges
+          <input type="number" min="0" step="0.01" [(ngModel)]="checkoutExtraCharges[selectedCheckoutId]" />
+        </label>
+        <label>
+          Checkout notes
+          <textarea rows="2" [(ngModel)]="checkoutNotes[selectedCheckoutId]"></textarea>
+        </label>
+        <button class="button primary" type="button" (click)="performCheckout(selectedCheckoutId)" [disabled]="loading">Check out</button>
+      </section>
+    </ng-template>
+
+    <ng-template #noKids>
+      <div class="info-banner">No children found for this customer. Please onboard a child first.</div>
+    </ng-template>
+  </div>
+
+  <section class="active-section">
+    <div class="section-header">
+      <h3>Active check-ins</h3>
+      <span>{{ activeCheckins.length }} active</span>
+    </div>
+
+    <app-loading-spinner *ngIf="activeLoading" label="Loading active check-ins..." [compact]="true"></app-loading-spinner>
+    <div *ngIf="activeError" class="error">{{ activeError }}</div>
+
+    <div *ngIf="!activeLoading && !activeError && activeCheckins.length === 0" class="empty-state">
+      No active check-ins found for this branch.
+    </div>
+
+    <table class="active-table" *ngIf="activeCheckins.length">
+      <thead>
+        <tr>
+          <th>Customer</th>
+          <th>Children</th>
+          <th>Check-in time</th>
+          <th>Balance</th>
+          <th>Checkout details</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let row of activeCheckins">
+          <ng-container *ngIf="getCheckinId(row) as id">
+            <td>
+              <strong>{{ row.parentName || ('Customer #' + row.customerId) }}</strong>
+              <span>{{ row.phoneNumber || '-' }}</span>
+            </td>
+            <td>{{ kidNames(row) }}</td>
+            <td>{{ row.checkinTime || row.checkedInAt || '-' }}</td>
+            <td>{{ row.sessionBalance ?? '-' }}</td>
+            <td class="checkout-fields">
+              <input type="number" min="0" step="0.01" placeholder="Extra charges" [(ngModel)]="checkoutExtraCharges[id]" />
+              <input type="text" placeholder="Checkout notes" [(ngModel)]="checkoutNotes[id]" />
+            </td>
+            <td>
+              <button class="button primary" type="button" (click)="performCheckout(id)" [disabled]="loading">Check out</button>
+            </td>
+          </ng-container>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <div class="debug" *ngIf="rawResponse">
+    <button class="button" type="button" (click)="showRaw = !showRaw">Toggle raw response</button>
+    <pre *ngIf="showRaw">{{ rawResponse | json }}</pre>
+  </div>
+</section>

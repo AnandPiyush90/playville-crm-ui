@@ -1,0 +1,67 @@
+<section class="page-shell">
+  <div class="page-header">
+    <div>
+      <h2>Customer details</h2>
+      <p class="subtitle">Review customer information, add kids, recharge packages, and start visits.</p>
+    </div>
+    <div class="header-actions">
+      <button class="button secondary" type="button" (click)="purchasePackage()" [disabled]="!customer">Purchase package</button>
+      <button class="button secondary" type="button" (click)="checkin()" [disabled]="!customer">Check-in / Check-out</button>
+      <button class="button primary" type="button" (click)="edit()" [disabled]="!customer">Edit customer</button>
+    </div>
+  </div>
+
+  <div *ngIf="loading" class="loading">Loading customer details...</div>
+  <div *ngIf="error" class="error-banner">{{ error }}</div>
+
+  <div *ngIf="customer" class="detail-grid">
+    <div class="info-card">
+      <h3>Parent details</h3>
+      <p><strong>Name:</strong> {{ customer.parentName }}</p>
+      <p><strong>Phone:</strong> {{ customer.phoneNumber }}</p>
+      <p><strong>Email:</strong> {{ customer.email || '-' }}</p>
+      <p><strong>Lead source:</strong> {{ customer.leadSource || '-' }}</p>
+      <p><strong>Package:</strong> {{ customer.currentPackageName || '-' }}</p>
+    </div>
+    <div class="info-card">
+      <h3>Metrics</h3>
+      <p><strong>Session balance:</strong> {{ customer.globalSessionBalance ?? 0 }}</p>
+      <p><strong>Total visits:</strong> {{ customer.totalVisits ?? 0 }}</p>
+      <p><strong>Disclaimer accepted:</strong> {{ customer.disclaimerAccepted ? 'Yes' : 'No' }}</p>
+    </div>
+  </div>
+
+  <section class="kids-shell" *ngIf="customer">
+    <h3>Kids</h3>
+    <ul class="kids-list">
+      <li *ngFor="let kid of customer.kids">
+        <strong>{{ kid.kidName }}</strong> - {{ kid.gender }} - DOB: {{ kid.dob }}
+      </li>
+    </ul>
+
+    <form [formGroup]="kidForm" (ngSubmit)="addKid()" class="kid-form">
+      <h4>Add a kid</h4>
+      <label>
+        Child name
+        <input type="text" formControlName="kidName" />
+      </label>
+      <label>
+        Date of birth
+        <input type="date" formControlName="dob" />
+      </label>
+      <label>
+        Gender
+        <select formControlName="gender">
+          <option value="Male">Male</option>
+          <option value="Female">Female</option>
+          <option value="Other">Other</option>
+        </select>
+      </label>
+      <label>
+        Notes
+        <textarea formControlName="specialNotes"></textarea>
+      </label>
+      <button class="button primary" type="submit" [disabled]="kidForm.invalid">Add kid</button>
+    </form>
+  </section>
+</section>

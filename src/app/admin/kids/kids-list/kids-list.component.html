@@ -1,0 +1,34 @@
+<section class="page-shell">
+  <div class="page-header">
+    <div>
+      <h2>Kids</h2>
+      <p class="subtitle">Select a parent to view and add children.</p>
+    </div>
+  </div>
+
+  <section class="panel">
+    <app-loading-spinner *ngIf="customersLoading" label="Loading parents..."></app-loading-spinner>
+    <label>
+      Parent
+      <select [(ngModel)]="selectedCustomerId" (change)="loadCustomer()">
+        <option [ngValue]="undefined">Select parent</option>
+        <option *ngFor="let c of customers" [ngValue]="c.id">{{ c.parentName }} - {{ c.phoneNumber }}</option>
+      </select>
+    </label>
+  </section>
+
+  <section class="panel" *ngIf="customer">
+    <h3>{{ customer.parentName }}'s kids</h3>
+    <ul>
+      <li *ngFor="let kid of customer.kids"><strong>{{ kid.kidName }}</strong> - {{ kid.gender }} - {{ kid.dob }}</li>
+    </ul>
+
+    <form [formGroup]="form" (ngSubmit)="addKid()" class="grid">
+      <label>Child name<input formControlName="kidName" /></label>
+      <label>Date of birth<input type="date" formControlName="dob" /></label>
+      <label>Gender<select formControlName="gender"><option>Male</option><option>Female</option><option>Other</option></select></label>
+      <label>Notes<input formControlName="specialNotes" /></label>
+      <button class="button primary" type="submit" [disabled]="form.invalid">Add kid</button>
+    </form>
+  </section>
+</section>

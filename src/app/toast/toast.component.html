@@ -1,0 +1,6 @@
+<div class="toast-container" *ngIf="(toast.messages$ | async) as messages">
+  <div class="toast" *ngFor="let msg of messages" [class]="msg.type">
+    <span>{{ msg.text }}</span>
+    <button type="button" aria-label="Close" (click)="toast.dismiss(msg.id)">&times;</button>
+  </div>
+</div>

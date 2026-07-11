@@ -1,0 +1,49 @@
+<section class="page-shell">
+  <div class="page-header">
+    <div>
+      <h2>Staff</h2>
+      <p class="subtitle">Create and manage staff for the current branch.</p>
+    </div>
+  </div>
+
+  <form [formGroup]="form" (ngSubmit)="create()" class="panel">
+    <h3>New staff</h3>
+    <div class="grid">
+      <label>Full name<input formControlName="fullName" /></label>
+      <label>Email<input formControlName="email" /></label>
+      <label>Phone<input formControlName="phone" /></label>
+      <label>Username<input formControlName="username" /></label>
+      <label>Password<input type="password" formControlName="password" /></label>
+      <label>
+        Role
+        <select formControlName="role">
+          <option value="staff">Staff</option>
+          <option value="manager">Manager</option>
+          <option value="admin">Admin</option>
+        </select>
+      </label>
+    </div>
+    <button class="button primary" type="submit" [disabled]="loading || form.invalid">Create staff</button>
+  </form>
+
+  <section class="panel">
+    <h3>Staff list</h3>
+    <app-loading-spinner *ngIf="loading && staff.length === 0" label="Loading staff..."></app-loading-spinner>
+    <app-loading-spinner *ngIf="loading && staff.length > 0" label="Refreshing staff..." [compact]="true"></app-loading-spinner>
+    <div *ngIf="error" class="error">{{ error }}</div>
+    <div *ngIf="!loading && !error && staff.length === 0" class="loading">No staff found.</div>
+    <table *ngIf="staff.length">
+      <thead><tr><th>Name</th><th>Username</th><th>Role</th><th>Contact</th><th>Status</th><th></th></tr></thead>
+      <tbody>
+        <tr *ngFor="let row of staff">
+          <td>{{ row.fullName }}</td>
+          <td>{{ row.username }}</td>
+          <td>{{ row.role }}</td>
+          <td>{{ row.phone || row.email || '-' }}</td>
+          <td>{{ row.active === false ? 'Inactive' : 'Active' }}</td>
+          <td><button class="button secondary" type="button" (click)="deactivate(row)" [disabled]="row.active === false">Deactivate</button></td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+</section>

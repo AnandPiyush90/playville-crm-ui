@@ -1,0 +1,100 @@
+.page-shell {
+  padding: 1.5rem;
+  background: var(--surface);
+  border-radius: 1rem;
+  box-shadow: var(--shadow-card);
+  border: 1px solid var(--border);
+}
+
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.25rem;
+}
+
+.subtitle {
+  margin: 0.35rem 0 0;
+  color: var(--text-muted);
+}
+
+.detail-grid {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  margin-bottom: 1.5rem;
+}
+
+.info-card {
+  background: var(--surface-soft);
+  border-radius: 1rem;
+  padding: 1.25rem;
+  border: 1px solid var(--border);
+}
+
+.kids-shell {
+  display: grid;
+  gap: 1.25rem;
+}
+
+.kids-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 0.75rem;
+}
+
+.kid-form {
+  display: grid;
+  gap: 1rem;
+  background: var(--surface-soft);
+  border-radius: 1rem;
+  padding: 1.25rem;
+  border: 1px solid var(--border);
+}
+
+.kid-form label {
+  display: grid;
+  gap: 0.5rem;
+}
+
+.kid-form input,
+.kid-form select,
+.kid-form textarea {
+  min-height: 3rem;
+  padding: 0.85rem 1rem;
+  border: 1px solid #cbd5e1;
+  border-radius: 0.8rem;
+}
+
+textarea {
+  min-height: 6rem;
+  resize: vertical;
+}
+
+.loading,
+.error-banner {
+  padding: 1rem;
+  border-radius: 0.8rem;
+  margin-bottom: 1rem;
+}
+
+.loading {
+  background: var(--surface-soft);
+  color: var(--text-muted);
+}
+
+.error-banner {
+  background: rgba(212, 38, 71, 0.12);
+  color: var(--danger);
+}
+
+.button.primary {
+  background: linear-gradient(135deg, var(--brand-blue), var(--brand-purple));
+  color: white;
+  border: none;
+  border-radius: 0.9rem;
+  padding: 0.9rem 1.1rem;
+  cursor: pointer;
+}

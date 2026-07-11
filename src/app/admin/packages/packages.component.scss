@@ -1,0 +1,11 @@
+.page-shell { display: grid; gap: 1rem; }
+.page-header { display: flex; justify-content: space-between; align-items: center; gap: 1rem; }
+.subtitle, .loading { color: #6b7280; }
+.form-shell, .data-table { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 1rem; }
+.grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 0.75rem; }
+label { display: grid; gap: 0.35rem; font-weight: 600; }
+input { border: 1px solid #d1d5db; border-radius: 6px; padding: 0.5rem; font: inherit; }
+.checkbox, .toggle { display: flex; align-items: center; gap: 0.5rem; }
+.actions { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-top: 0.75rem; }
+.data-table { width: 100%; border-collapse: collapse; padding: 0; }
+.data-table th, .data-table td { border-top: 1px solid #e5e7eb; padding: 0.7rem; text-align: left; }

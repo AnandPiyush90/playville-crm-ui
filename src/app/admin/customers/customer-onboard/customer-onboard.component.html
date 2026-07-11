@@ -1,0 +1,53 @@
+<section class="page-shell">
+  <div class="page-header">
+    <div>
+      <h2>Onboard Customer</h2>
+      <p class="subtitle">Create a new customer record for the current branch.</p>
+    </div>
+  </div>
+
+  <form [formGroup]="form" (ngSubmit)="submit()" class="form-shell">
+    <div class="form-row">
+      <label>
+        Parent name
+        <input type="text" formControlName="parentName" />
+      </label>
+      <label>
+        Phone number
+        <input type="text" formControlName="phoneNumber" />
+      </label>
+    </div>
+
+    <div class="form-row">
+      <label>
+        Email
+        <input type="email" formControlName="email" />
+      </label>
+      <label>
+        Lead source
+        <select formControlName="leadSource">
+          <option value="">Select</option>
+          <option value="Walk_in">Walk in</option>
+          <option value="Google">Google</option>
+          <option value="Instagram">Instagram</option>
+          <option value="Facebook">Facebook</option>
+          <option value="Friend_Referral">Friend referral</option>
+          <option value="School">School</option>
+          <option value="Other">Other</option>
+        </select>
+      </label>
+    </div>
+
+    <label class="checkbox-row">
+      <input type="checkbox" formControlName="disclaimerAccepted" />
+      <span>I confirm the customer disclaimer.</span>
+    </label>
+
+    <div class="action-row">
+      <button class="button primary" type="submit" [disabled]="loading || form.invalid">
+        {{ loading ? 'Creating...' : 'Create customer' }}
+      </button>
+      <span class="status" *ngIf="error">{{ error }}</span>
+    </div>
+  </form>
+</section>

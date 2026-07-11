@@ -1,0 +1,55 @@
+<section class="page-shell">
+  <div class="page-header">
+    <div>
+      <h2>Edit customer</h2>
+      <p class="subtitle">Update branch customer details and save the latest data.</p>
+    </div>
+  </div>
+
+  <div *ngIf="loading" class="loading">Loading customer…</div>
+  <div *ngIf="error" class="error-banner">{{ error }}</div>
+
+  <form *ngIf="customer" [formGroup]="form" (ngSubmit)="save()" class="form-shell">
+    <div class="form-row">
+      <label>
+        Parent name
+        <input type="text" formControlName="parentName" />
+      </label>
+      <label>
+        Phone number
+        <input type="text" formControlName="phoneNumber" />
+      </label>
+    </div>
+
+    <div class="form-row">
+      <label>
+        Email
+        <input type="email" formControlName="email" />
+      </label>
+      <label>
+        Lead source
+        <select formControlName="leadSource">
+          <option value="">Select</option>
+          <option value="Walk_in">Walk in</option>
+          <option value="Google">Google</option>
+          <option value="Instagram">Instagram</option>
+          <option value="Facebook">Facebook</option>
+          <option value="Friend_Referral">Friend referral</option>
+          <option value="School">School</option>
+          <option value="Other">Other</option>
+        </select>
+      </label>
+    </div>
+
+    <label class="checkbox-row">
+      <input type="checkbox" formControlName="disclaimerAccepted" />
+      <span>Disclaimer accepted</span>
+    </label>
+
+    <div class="action-row">
+      <button class="button primary" type="submit" [disabled]="loading || form.invalid">
+        {{ loading ? 'Saving...' : 'Save customer' }}
+      </button>
+    </div>
+  </form>
+</section>

@@ -1,0 +1,46 @@
+<section class="page-shell">
+  <div class="page-header">
+    <div>
+      <h2>Customers</h2>
+      <p class="subtitle">Branch customer list with quick actions for view, edit, and check-in.</p>
+    </div>
+    <a class="button primary" [routerLink]="['/admin/customers/new']">Onboard Customer</a>
+  </div>
+
+  <div class="search-row">
+    <input placeholder="Search by name or phone" [(ngModel)]="search" />
+    <button class="button secondary" type="button" (click)="load()">Search</button>
+  </div>
+
+  <div *ngIf="loading" class="loading">Loading customers…</div>
+  <div *ngIf="error" class="error-banner">{{ error }}</div>
+
+  <table class="data-table" *ngIf="!loading">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Parent</th>
+        <th>Phone</th>
+        <th>Balance</th>
+        <th>Visits</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let c of customers">
+        <td>{{ c.id }}</td>
+        <td>{{ c.parentName }}</td>
+        <td>{{ c.phoneNumber }}</td>
+        <td>{{ c.globalSessionBalance ?? '-' }}</td>
+        <td>{{ c.totalVisits ?? 0 }}</td>
+        <td class="actions">
+          <button class="button tertiary" type="button" (click)="view(c.id)">View</button>
+          <button class="button tertiary" type="button" (click)="edit(c.id)">Edit</button>
+          <button class="button secondary" type="button" (click)="checkin(c.id)">
+            {{ isCheckedIn(c.id) ? 'Check-out' : 'Check-in' }}
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</section>

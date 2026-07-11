@@ -1,0 +1,56 @@
+<section class="page-shell">
+  <div class="page-header">
+    <div>
+      <h2>Packages</h2>
+      <p class="subtitle">Create and manage visit packages used for purchases and recharges.</p>
+    </div>
+    <label class="toggle">
+      <input type="checkbox" [(ngModel)]="showAll" (change)="load()" />
+      Show inactive
+    </label>
+  </div>
+
+  <form [formGroup]="form" (ngSubmit)="save()" class="form-shell">
+    <h3>{{ editing ? 'Edit package' : 'New package' }}</h3>
+    <div class="grid">
+      <label>Package name<input formControlName="packageName" /></label>
+      <label>Paid sessions<input type="number" formControlName="sessionsPurchased" /></label>
+      <label>Bonus sessions<input type="number" formControlName="sessionsBonus" /></label>
+      <label>Price/session<input type="number" formControlName="pricePerSession" /></label>
+      <label>Total price<input type="number" formControlName="totalPrice" /></label>
+      <label>Validity days<input type="number" formControlName="validityDays" /></label>
+      <label>Birthday discount %<input type="number" formControlName="birthdayDiscountPct" /></label>
+      <label>Recharge discount %<input type="number" formControlName="rechargeDiscountPct" /></label>
+      <label>Display order<input type="number" formControlName="displayOrder" /></label>
+      <label class="checkbox"><input type="checkbox" formControlName="canUpgrade" /> Can upgrade</label>
+    </div>
+    <div class="actions">
+      <button class="button primary" type="submit" [disabled]="loading || form.invalid">{{ editing ? 'Update' : 'Create' }}</button>
+      <button class="button" type="button" (click)="reset()">Clear</button>
+    </div>
+  </form>
+
+  <app-loading-spinner *ngIf="loading && packages.length === 0" label="Loading packages..."></app-loading-spinner>
+  <app-loading-spinner *ngIf="loading && packages.length > 0" label="Refreshing packages..." [compact]="true"></app-loading-spinner>
+  <div *ngIf="error" class="error">{{ error }}</div>
+  <div *ngIf="!loading && !error && packages.length === 0" class="loading">No packages found.</div>
+  <table class="data-table" *ngIf="packages.length">
+    <thead>
+      <tr><th>Name</th><th>Sessions</th><th>Price</th><th>Validity</th><th>Status</th><th>Actions</th></tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let pkg of packages">
+        <td>{{ pkg.packageName }}</td>
+        <td>{{ pkg.sessionsPurchased }} + {{ pkg.sessionsBonus ?? 0 }} = {{ pkg.sessionsTotal ?? (pkg.sessionsPurchased + (pkg.sessionsBonus ?? 0)) }}</td>
+        <td>{{ pkg.totalPrice }}</td>
+        <td>{{ pkg.validityDays ?? '-' }}</td>
+        <td>{{ pkg.active === false ? 'Inactive' : 'Active' }}</td>
+        <td class="actions">
+          <button class="button tertiary" type="button" (click)="edit(pkg)">Edit</button>
+          <button class="button secondary" type="button" *ngIf="pkg.active !== false" (click)="deactivate(pkg)">Deactivate</button>
+          <button class="button secondary" type="button" *ngIf="pkg.active === false" (click)="reactivate(pkg)">Reactivate</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</section>

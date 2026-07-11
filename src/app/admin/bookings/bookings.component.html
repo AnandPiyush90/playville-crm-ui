@@ -1,0 +1,71 @@
+<section class="page-shell">
+  <div class="page-header">
+    <div>
+      <h2>Bookings</h2>
+      <p class="subtitle">Manage birthday parties and school trips.</p>
+    </div>
+  </div>
+
+  <div class="two-col">
+    <form class="panel" [formGroup]="birthdayForm" (ngSubmit)="createBirthday()">
+      <h3>Birthday booking</h3>
+      <div class="grid">
+        <label>Customer<select formControlName="customerId" (change)="loadCustomerKids()"><option [ngValue]="null">Select</option><option *ngFor="let c of customers" [ngValue]="c.id">{{ c.parentName }} - {{ c.phoneNumber }}</option></select></label>
+        <label>Kid<select formControlName="kidId"><option [ngValue]="null">Select</option><option *ngFor="let k of selectedCustomer?.kids" [ngValue]="k.id">{{ k.kidName }}</option></select></label>
+        <label>Date<input type="date" formControlName="partyDate" /></label>
+        <label>Slot start<input formControlName="partySlotStart" /></label>
+        <label>Guests<input type="number" formControlName="expectedGuests" /></label>
+        <label>Base amount<input type="number" formControlName="baseAmount" /></label>
+        <label>Advance<input type="number" formControlName="advancePaid" /></label>
+        <label>Payment<select formControlName="paymentMode"><option>Cash</option><option>UPI</option><option>Card</option><option>Online</option></select></label>
+        <label class="wide">Notes<input formControlName="notes" /></label>
+      </div>
+      <button class="button primary" type="submit" [disabled]="birthdayForm.invalid">Create birthday booking</button>
+    </form>
+
+    <form class="panel" [formGroup]="tripForm" (ngSubmit)="createTrip()">
+      <h3>School trip</h3>
+      <div class="grid">
+        <label>School<input formControlName="schoolName" /></label>
+        <label>Contact<input formControlName="contactPerson" /></label>
+        <label>Phone<input formControlName="contactPhone" /></label>
+        <label>Date<input type="date" formControlName="tripDate" /></label>
+        <label>Start<input formControlName="slotStart" /></label>
+        <label>End<input formControlName="slotEnd" /></label>
+        <label>Expected kids<input type="number" formControlName="expectedKids" /></label>
+        <label>Total amount<input type="number" formControlName="totalAmount" /></label>
+        <label>Payment<select formControlName="paymentMode"><option>Cash</option><option>UPI</option><option>Card</option><option>Online</option></select></label>
+      </div>
+      <button class="button primary" type="submit" [disabled]="tripForm.invalid">Create school trip</button>
+    </form>
+  </div>
+
+  <section class="panel">
+    <h3>Birthday bookings</h3>
+    <app-loading-spinner *ngIf="birthdayLoading" label="Loading birthday bookings..."></app-loading-spinner>
+    <div *ngIf="birthdayError" class="error">{{ birthdayError }}</div>
+    <div *ngIf="!birthdayLoading && !birthdayError && birthdayBookings.length === 0" class="loading">No birthday bookings found.</div>
+    <table *ngIf="birthdayBookings.length">
+      <tr *ngFor="let b of birthdayBookings">
+        <td>{{ b.parentName }} / {{ b.kidName }}</td><td>{{ b.partyDate }}</td><td>{{ b.totalAmount ?? b.baseAmount ?? '-' }}</td>
+        <td><select [(ngModel)]="statusById[b.id]"><option>Enquiry</option><option>Confirmed</option><option>Completed</option><option>Cancelled</option></select></td>
+        <td><button class="button secondary" type="button" (click)="updateBirthdayStatus(b)">Update</button></td>
+      </tr>
+    </table>
+  </section>
+
+  <section class="panel">
+    <h3>School trips</h3>
+    <app-loading-spinner *ngIf="schoolTripLoading" label="Loading school trips..."></app-loading-spinner>
+    <div *ngIf="schoolTripError" class="error">{{ schoolTripError }}</div>
+    <div *ngIf="!schoolTripLoading && !schoolTripError && schoolTrips.length === 0" class="loading">No school trips found.</div>
+    <table *ngIf="schoolTrips.length">
+      <tr *ngFor="let t of schoolTrips">
+        <td>{{ t.schoolName }}</td><td>{{ t.tripDate }}</td><td>{{ t.expectedKids }} expected</td>
+        <td><input type="number" [(ngModel)]="actualKidsById[t.id]" placeholder="Actual kids" /></td>
+        <td><select [(ngModel)]="statusById[t.id]"><option>Enquiry</option><option>Confirmed</option><option>Completed</option><option>Cancelled</option></select></td>
+        <td><button class="button secondary" type="button" (click)="updateTripStatus(t)">Update</button></td>
+      </tr>
+    </table>
+  </section>
+</section>
